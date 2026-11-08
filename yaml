@@ -1,0 +1,23 @@
+workflows:
+  ios-build:
+    name: Build Nyxian IPA
+    max_build_duration: 60
+    instance_type: mac_mini_m1
+    environment:
+      xcode: latest
+      cocoapods: default
+    scripts:
+      - name: Install dependencies
+        script: |
+          pod install --repo-update || true
+      - name: Build Xcode Project
+        script: |
+          xcodebuild build -workspace Nyxian.xcworkspace -scheme Nyxian -configuration Release CODE_SIGNING_ALLOWED=NO
+      - name: Package IPA
+        script: |
+          mkdir -p build/Artifacts
+          mv build/Release-iphoneos/Nyxian.app build/Artifacts/Nyxian.app || true
+          # Если структуры папок отличаются, xcodebuild сам создаст билд в стандартной директории.
+    artifacts:
+      - build/${{ google_workspace }}/output/*.ipa
+      - $HOME/Library/Developer/Xcode/DerivedData/**/Build/Products/Release-iphoneos/*.app
