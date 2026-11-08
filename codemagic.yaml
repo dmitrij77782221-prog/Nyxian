@@ -13,6 +13,15 @@ workflows:
       - name: Build Xcode Project
         script: |
           xcodebuild build -project Nyxian.xcodeproj -scheme Nyxian -configuration Release CODE_SIGNING_ALLOWED=NO
+      - name: Package Unsigned IPA
+        script: |
+          mkdir -p build/Payload
+          # Находим скомпилированное приложение и копируем в Payload
+          APP_PATH=$(find $HOME/Library/Developer/Xcode/DerivedData -name "Nyxian.app" -type d | head -n 1)
+          cp -r "$APP_PATH" build/Payload/
+          # Упаковываем в zip, меняя расширение на .ipa
+          cd build && zip -r Nyxian_unsigned.ipa Payload
     artifacts:
-      - $HOME/Library/Developer/Xcode/DerivedData/**/Build/Products/Release-iphoneos/*.app
+      - build/*.ipa
+
 
