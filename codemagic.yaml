@@ -12,6 +12,7 @@ workflows:
           pod install --repo-update || true
       - name: Build Xcode Project
         script: |
-          xcodebuild build -workspace Nyxian.xcworkspace -scheme Nyxian -configuration Release CODE_SIGNING_ALLOWED=NO
+          xcodebuild build -project Nyxian.xcodeproj -scheme Nyxian -configuration Release CODE_SIGNING_ALLOWED=NO
     artifacts:
       - $HOME/Library/Developer/Xcode/DerivedData/**/Build/Products/Release-iphoneos/*.app
+
